@@ -19,12 +19,12 @@ export default function Todos() {
       setLoading(true);
       setError("");
       const response = await fetch(API_URL);
-      console.log(response);
+      // console.log(response);
       if (!response.ok) {
         throw new Error("Failed to fetch todos");
       }
       const data = await response.json();
-      console.log(data.todos);
+      // console.log(data.todos);
       setTodos(data.todos);
     } catch (error) {
       setError(error.message || "Something went wrong");
@@ -39,70 +39,88 @@ export default function Todos() {
     const trimmedTask = title.trim();
 
     if (!trimmedTask) {
-        return;
+      return;
     }
 
-    try{
-        setIsSubmitting(true);
-        setError("");
+    try {
+      setIsSubmitting(true);
+      setError("");
 
-        const response = await fetch(API_URL, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({tasks: trimmedTask}),
-            
-        });
-        if (!response.ok){
-            throw new Error("Failed to create todo")
-        }
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tasks: trimmedTask }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create todo");
+      }
 
-        const newTodo = await response.json();
+      const newTodo = await response.json();
 
-        setTodos((prevTodos) => [...prevTodos, newTodo]);
-        setTitle("");
+      setTodos((prevTodos) => [...prevTodos, newTodo]);
+      setTitle("");
+      await fetchTodos()
+    } catch (err) {
+      setError(err.message || "something went wrong");
+    } finally {
+      setIsSubmitting(false);
     }
-    catch(err){
-        setError(err.message || "something went wrong")
-    }
-    finally{
-        setIsSubmitting(false);
-    }
-
   }
 
-  async function handleToggle(id, currentCompleted){
-    try{
-        setError("");
-        const reponse = await fetch(`${API_URL}/${id}/toggle`,{
-            method:"PATCH",
-            headers:{
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({completed: !currentCompleted})
-        });
+  async function handleToggle(id, currentCompleted) {
+    try {
+      console.log("Trying to print id value")
+      console.log(id);
+      console.log(currentCompleted)
+      setError("");
+      const response = await fetch(`${API_URL}/${id}/toggle`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ completed: !currentCompleted }),
+      });
 
-        if (!reponse.ok){
-            throw new Error("Failed to Update Todo");
-        }
+      if (!response.ok) {
+        throw new Error("Failed to Update Todo");
+      }
 
-        const updatedTodo = await response.json();
+      const updatedTodo = await response.json();
 
+      setTodos((prevTodos) =>
+        prevTodos.map((todo) => {
+          if (todo.task_id === id) {
+            return updatedTodo;
+          }
 
-        setTodos((prevTodos)=>
-            prevTodos.map((todo) =>{
-                if(todo.id === id){
-                    return updatedTodo;
-                }
-
-                return todo
-            })
-        );
-    }catch(err){
-        setError(err.message || "something went wrong while toggling");
+          return todo;
+        }),
+      );
+      await fetchTodos();
+    } catch (err) {
+      setError(err.message || "something went wrong while toggling");
     }
+  }
 
+
+  async function handleDelete(id){
+    try{
+      setError("");
+      const response = await fetch(`${API_URL}/delete/${id}`, {
+        method: "DELETE",
+      })
+
+      if(!response.ok){
+        throw new Error("Failed to delete TODo")
+      }
+
+      setTodos((prevTodos) => prevTodos.filter((todo)=> todo.task_id !== id));
+      await fetchTodos()
+    }catch(err){
+      setError(err.message || "Something went wrong");
+    }
   }
 
   return (
@@ -110,28 +128,37 @@ export default function Todos() {
       <h2>Todos </h2>
 
       <form onSubmit={handleSubmit} className="todo-form">
-            <input 
-            type="text" 
-            placeholder="Enter your todo" 
-            value={title}
-            onChange={(event) => setTitle(event.target.value)} />
+        <input
+          type="text"
+          placeholder="Enter your todo"
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
+        />
 
-            <button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Adding...": "Add Todo"}
-
-            </button>
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Adding..." : "Add Todo"}
+        </button>
       </form>
       {loading && <p>Loading todos... </p>}
-      {error && <p> Error: {error}</p>}
+      {error && <p className="error"> Error: {error}</p>}
 
       {!loading && !error && todos.length === 0 && <p>No todos found</p>}
 
       {!loading && !error && todos.length > 0 && (
         <ul>
           {todos.map((todo) => (
-            <li key={todo.task_id}>
-              <strong>{todo.tasks}</strong>{" "}
-              {todo.completed ? "(Completed)" : "(Not Completed)"}
+            <li key={todo.task_id} className="todo-item">
+              {/* <strong>{todo.tasks}</strong>{" "}
+              {todo.completed ? "(Completed)" : "(Not Completed)"} */}
+              <span className={todo.completed ? "completed":""} onClick={() => handleToggle(todo.task_id, todo.completed)}>{todo.tasks}</span>
+              <div className="todo-actions">
+                <button type="button" onClick={() => handleToggle(todo.task_id, todo.completed)}>
+                  {todo.completed ? "Undo": "Complete"}
+                </button>
+                 <button type="button" onClick={() => handleDelete(todo.task_id)}>
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
         </ul>
