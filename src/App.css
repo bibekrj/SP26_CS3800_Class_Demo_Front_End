@@ -1,32 +1,32 @@
-body{
-  margin:0;
+body {
+  margin: 0;
   font-family: Arial, Helvetica, sans-serif;
   background-color: #BAC4C8;
 }
 
-.app{
+.app {
   max-width: 900px;
   margin: 0 auto;
   padding: 24px;
 }
 
-.navbar{
-  display:flex;
+.navbar {
+  display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
   background-color: white;
   border-radius: 8px;
   padding: 16px;
-} 
+}
 
 
-.nav-links{
+.nav-links {
   display: flex;
   gap: 10px;
 }
 
-button{
+button {
   padding: 8px 14px;
   border: 1px solid #ccc;
   background-color: white;
@@ -34,32 +34,33 @@ button{
   cursor: pointer;
 }
 
-button.active{
-  border-color:black;
+button.active {
+  border-color: black;
   font-weight: bold;
 }
 
-.content{
+.content {
   background-color: white;
   padding: 24px;
   border-radius: 8px;
   width: 800px;
-} 
+}
 
-.todo-form{
+.todo-form {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;;
+  margin-bottom: 20px;
+  ;
 }
 
 
-.todo-form input{
+.todo-form input {
   flex: 1;
   padding: 10px;
   font-size: 1rem;
 }
 
-.todo-item{
+.todo-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -71,22 +72,41 @@ button.active{
 }
 
 
-.todo-item span{
+.todo-item span {
   cursor: pointer;
   flex: 1;
 }
 
 
-.completed{
+.completed {
   text-decoration: line-through;
   color: gray;
 }
 
-.todo-actions{
+.todo-actions {
   display: flex;
-  gap:8px;
+  gap: 8px;
 }
 
-.error{
-  color:crimson;
+.error {
+  color: crimson;
 }
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  margin-bottom: 16px;
+
+}
+
+.auth-form input{
+  padding: 10px;
+  font-size: 1rem;
+}
+
+.success{
+  color: green;
+}
+

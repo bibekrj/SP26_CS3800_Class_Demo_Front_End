@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Todos from "./pages/Todos";
 import About from "./pages/About";
 import Login from "./pages/Login";
-// import Register from "./pages/Register";
+import Register from "./pages/Register";
 
 
 
