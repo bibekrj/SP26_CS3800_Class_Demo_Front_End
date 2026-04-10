@@ -3,7 +3,11 @@ const API_URL = "http://localhost:3000/api/todos";
 
 // CONST API_URL2 = "api/admin/todos"
 
-export default function Todos() {
+//Used ChatGPT  to debug the function.
+// Originally, the function was missing curly braces to parse the token object
+// Backend, on login, return data object which comes wih token + user details and needs to be parsed separately to get token
+// Todo Function is responsible for loading creating todos
+export default function Todos({ token, user }) {
   const [todos, setTodos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -18,15 +22,20 @@ export default function Todos() {
     try {
       setLoading(true);
       setError("");
-      const response = await fetch(API_URL);
-      // console.log(response);
+      console.log(token);
+      const response = await fetch(API_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log("the respnse we got", response);
       if (!response.ok) {
         throw new Error("Failed to fetch todos");
       }
       const data = await response.json();
-      // console.log(data.todos);
       setTodos(data.todos);
     } catch (error) {
+      console.log("Error is happening");
       setError(error.message || "Something went wrong");
     } finally {
       setLoading(false);
@@ -50,6 +59,7 @@ export default function Todos() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ tasks: trimmedTask }),
       });
@@ -61,7 +71,7 @@ export default function Todos() {
 
       setTodos((prevTodos) => [...prevTodos, newTodo]);
       setTitle("");
-      await fetchTodos()
+      await fetchTodos();
     } catch (err) {
       setError(err.message || "something went wrong");
     } finally {
@@ -71,14 +81,15 @@ export default function Todos() {
 
   async function handleToggle(id, currentCompleted) {
     try {
-      console.log("Trying to print id value")
+      console.log("Trying to print id value");
       console.log(id);
-      console.log(currentCompleted)
+      console.log(currentCompleted);
       setError("");
       const response = await fetch(`${API_URL}/${id}/toggle`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ completed: !currentCompleted }),
       });
@@ -104,21 +115,23 @@ export default function Todos() {
     }
   }
 
-
-  async function handleDelete(id){
-    try{
+  async function handleDelete(id) {
+    try {
       setError("");
       const response = await fetch(`${API_URL}/delete/${id}`, {
         method: "DELETE",
-      })
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      if(!response.ok){
-        throw new Error("Failed to delete TODo")
+      if (!response.ok) {
+        throw new Error("Failed to delete TODo");
       }
 
-      setTodos((prevTodos) => prevTodos.filter((todo)=> todo.task_id !== id));
-      await fetchTodos()
-    }catch(err){
+      setTodos((prevTodos) => prevTodos.filter((todo) => todo.task_id !== id));
+      await fetchTodos();
+    } catch (err) {
       setError(err.message || "Something went wrong");
     }
   }
@@ -150,12 +163,23 @@ export default function Todos() {
             <li key={todo.task_id} className="todo-item">
               {/* <strong>{todo.tasks}</strong>{" "}
               {todo.completed ? "(Completed)" : "(Not Completed)"} */}
-              <span className={todo.completed ? "completed":""} onClick={() => handleToggle(todo.task_id, todo.completed)}>{todo.tasks}</span>
+              <span
+                className={todo.completed ? "completed" : ""}
+                onClick={() => handleToggle(todo.task_id, todo.completed)}
+              >
+                {todo.tasks}
+              </span>
               <div className="todo-actions">
-                <button type="button" onClick={() => handleToggle(todo.task_id, todo.completed)}>
-                  {todo.completed ? "Undo": "Complete"}
+                <button
+                  type="button"
+                  onClick={() => handleToggle(todo.task_id, todo.completed)}
+                >
+                  {todo.completed ? "Undo" : "Complete"}
                 </button>
-                 <button type="button" onClick={() => handleDelete(todo.task_id)}>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(todo.task_id)}
+                >
                   Delete
                 </button>
               </div>

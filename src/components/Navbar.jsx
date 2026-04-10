@@ -1,19 +1,66 @@
-export default function NavBar({ currentPage, onNavigate}){
-    return(
-        <nav className="navbar">
-            <h1> To Do App </h1>
+export default function NavBar({
+  currentPage,
+  onNavigate,
+  isLoggedIn,
+  user,
+  onLogOut,
+}) {
+  return (
+    <nav className="navbar">
+      <h1> To Do App </h1>
 
-            <div className="nav-links">
-                <button className={currentPage === "home" ? "active" : ""}  onClick={()=> onNavigate("home")}>Home</button>
-                <button className={currentPage === "todos" ? "active" : ""} onClick={()=> onNavigate("todos")}>To Do</button>
-                <button className={currentPage === "about" ? "active" : ""} onClick={()=> onNavigate("about")}>About</button>      
-                {/* <button className={currentPage === "logout" ? "active" : ""} onClick={()=> onNavigate("logout")}>Log Out</button>       */}
-                <button className={currentPage === "login"? "active": "" } onClick={()=> onNavigate("login")}>Login</button>
-                <button className={currentPage === "register"? "active": "" } onClick={()=> onNavigate("register")}>Register</button>
-            </div>
+      <div className="nav-links">
+        <button
+          className={currentPage === "home" ? "active" : ""}
+          onClick={() => onNavigate("home")}
+        >
+          Home
+        </button>
+        <button
+          className={currentPage === "todos" ? "active" : ""}
+          onClick={() => onNavigate("todos")}
+        >
+          To Do
+        </button>
+        <button
+          className={currentPage === "about" ? "active" : ""}
+          onClick={() => onNavigate("about")}
+        >
+          About
+        </button>
+        {!isLoggedIn && (
+          <>
+            <button
+              className={currentPage === "login" ? "active" : ""}
+              onClick={() => onNavigate("login")}
+            >
+              Login
+            </button>
+            <button
+              className={currentPage === "register" ? "active" : ""}
+              onClick={() => onNavigate("register")}
+            >
+              Register
+            </button>
+          </>
+        )}
 
-        </nav>
+        {isLoggedIn && (
+          <>
+            <span className="welcome-text">
+                Welcome, {user?.name || user?.email|| "User"}
+                </span>
+            <button
+              className={currentPage === "logout" ? "active" : ""}
+              onClick={() => onNavigate("logout")}
+            >
+              Log Out
+            </button>
+          </>
+        )}
+      </div>
+    </nav>
 
-        // C:\Users\Bibek\Desktop\todo_frontend_class_demo\src\App.css
-    )
+    // C:\Users\Bibek\Desktop\todo_frontend_class_demo\src\App.css
+  );
 }
