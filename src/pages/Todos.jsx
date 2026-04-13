@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-const API_URL = "http://localhost:3000/api/todos";
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/todos`;
 
 // CONST API_URL2 = "api/admin/todos"
 

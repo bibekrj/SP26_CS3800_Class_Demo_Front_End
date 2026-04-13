@@ -3,7 +3,7 @@ export default function NavBar({
   onNavigate,
   isLoggedIn,
   user,
-  onLogOut,
+  onLogout,
 }) {
   return (
     <nav className="navbar">
@@ -52,7 +52,7 @@ export default function NavBar({
                 </span>
             <button
               className={currentPage === "logout" ? "active" : ""}
-              onClick={() => onNavigate("logout")}
+              onClick={onLogout}
             >
               Log Out
             </button>

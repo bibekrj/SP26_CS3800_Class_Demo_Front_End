@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const API_URL = "http://localhost:3000/api/auth/login";
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/auth/login`;
 
 export default function Login({ onNavigate, onLogin }) {
   const [formData, setFormData] = useState({

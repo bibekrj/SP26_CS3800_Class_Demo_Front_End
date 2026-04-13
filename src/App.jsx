@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Todos from "./pages/Todos";
@@ -12,11 +12,31 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(()=>{
+    const savedToken = localStorage.getItem("token");
+    const savedUser = localStorage.getItem("user");
+
+    if (savedToken && savedUser){
+      try{
+        setToken(savedToken);
+        setUser(JSON.parse(savedUser));
+        setIsLoggedIn(true);
+      }catch(err){
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      }
+    }
+  }
+  )
+
   function handleLogin(loginData) {
     console.log("printing from handle login", loginData.token);
     setToken(loginData.token);
     setUser(loginData.user);
     setIsLoggedIn(true);
+
+    localStorage.setItem("token", loginData.token);
+    localStorage.setItem("user", JSON.stringify(loginData.user));
     setCurrentPage("home");
   }
 
@@ -24,6 +44,9 @@ export default function App() {
     setToken("");
     setUser(null);
     setIsLoggedIn(false);
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setCurrentPage("home");
   }
 
