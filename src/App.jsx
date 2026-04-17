@@ -5,6 +5,8 @@ import Todos from "./pages/Todos";
 import About from "./pages/About";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState("home");
@@ -12,16 +14,16 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     const savedToken = localStorage.getItem("token");
     const savedUser = localStorage.getItem("user");
 
-    if (savedToken && savedUser){
-      try{
+    if (savedToken && savedUser) {
+      try {
         setToken(savedToken);
         setUser(JSON.parse(savedUser));
         setIsLoggedIn(true);
-      }catch(err){
+      } catch (err) {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
       }
@@ -51,6 +53,7 @@ export default function App() {
   }
 
   function renderPage() {
+   
     if (currentPage === "home")
       return <Home user={user} isLoggedIn={isLoggedIn} />;
     if (currentPage === "todos") {
@@ -64,7 +67,12 @@ export default function App() {
       return <Login onNavigate={setCurrentPage} onLogin={handleLogin} />;
     if (currentPage === "register")
       return <Register onNavigate={setCurrentPage} />;
+    if (currentPage === "forgotPassword") 
+      return <ForgotPassword onNavigate={setCurrentPage} />
+    if (currentPage ==="resetPassword")
+      return <ResetPassword onNavigate={setCurrentPage}/>
     return <Home user={user} isLoggedIn={isLoggedIn} />;
+
   }
 
   return (

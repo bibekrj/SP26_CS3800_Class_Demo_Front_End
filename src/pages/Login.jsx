@@ -81,7 +81,14 @@ export default function Login({ onNavigate, onLogin }) {
         </button>
       </form>
 
-      {/* <button type="button" onClick={() =>  onNavigate("register")}>Need an Account? Register</button> */}
+      <div className="auth-links">
+        <button type="button" className="link-button" onClick={() => onNavigate("forgotPassword")}> Forgot Password</button>
+        <button type="button" className="link-button" onClick={() => onNavigate("resetPassword")}> Reset Password</button>
+
+        <button type="button" className="link-button" onClick={() => onNavigate("register")}> Need an Account? Register</button>
+      </div>
+
+      
 
       {message && <p className="success">{message}</p>}
       {error && <p className="error">Error: {error}</p>}
