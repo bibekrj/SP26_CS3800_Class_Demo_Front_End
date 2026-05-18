@@ -56,7 +56,7 @@ export default function Login({ onNavigate, onLogin }) {
   }
 
   return (
-    <section>
+    <section className="loginForm">
       <h2>Login</h2>
 
       <form onSubmit={handleSubmit} className="auth-form">
